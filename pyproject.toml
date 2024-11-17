@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "crypto-labs"
+version = "0.1.0"
+description = "Cryptography examples for personal exploration"
+authors = ["Gerasimos Tzakis <gertzakis@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.7.4"
+black = "^24.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
