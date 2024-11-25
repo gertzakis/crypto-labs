@@ -16,7 +16,7 @@ except ImportError:
 PYPROJECT_CONFIG = toml.load("pyproject.toml")
 TOOL_CONFIG = PYPROJECT_CONFIG["tool"]["poetry"]
 # Can be set to a separate Python version to be used for launching or building image
-PYTHON_VER = os.getenv("PYTHON_VER", "3.9")
+PYTHON_VER = os.getenv("PYTHON_VER", "3.11")
 
 
 def run_cmd(context, exec_cmd):
