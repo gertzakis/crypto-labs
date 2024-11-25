@@ -49,7 +49,15 @@ class TestKDF(unittest.TestCase):
         for i, test_vector in enumerate(test_vectors):
             self.assertEqual(pbkdf2(*test_vector, "sha1"), expected_results[i])
 
-
+    def test_pbkdf2_value_error_on_long_key(self):
+        """Test that pbkdf2 raises a ValueError when the derived key length is too long."""
+        password = b"password"
+        salt = b"salt"
+        iterations = 1
+        key_length = (2**32 - 1) * 20 + 1  # SHA1 has a digest_size of 20
+        digest = "sha1"
+        with self.assertRaises(ValueError):
+            pbkdf2(password, salt, iterations, key_length, digest)
 
     # TODO: add test cases for HKDF
     def test_hkdf(self):

@@ -18,6 +18,11 @@ def pbkdf2(password, salt, count, key_length, hash_function):
 
     derived_key = b""
     iteration = 1
+    hash_length = hmac.new(b"", b"", hash_function).digest_size
+
+    # Check if the derived key length is too long based on RFC 2898
+    if key_length > (2**32 - 1) * hash_length:
+        raise ValueError("Derived key too long")
 
     # While the derivative key length is less than the desired key length
     while len(derived_key) < key_length:
