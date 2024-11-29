@@ -17,7 +17,7 @@ def pbkdf2(password, salt, count, key_length, hash_function):
     """
 
     derived_key = b""
-    iteration = 1
+    block_number = 1
     hash_length = hmac.new(b"", b"", hash_function).digest_size
 
     # Check if the derived key length is too long based on RFC 2898
@@ -27,10 +27,10 @@ def pbkdf2(password, salt, count, key_length, hash_function):
     # While the derivative key length is less than the desired key length
     while len(derived_key) < key_length:
         # For the first iteration of the HMAC function, the salt is
-        # the initially provided salt concatenated with the iteration number
-        iteration_salt = salt + struct.pack(">i", iteration)
+        # the initially provided salt concatenated with the block number
+        iteration_salt = salt + struct.pack(">i", block_number)
         result = prf_result = hmac.new(password, iteration_salt, hash_function).digest()
-        # print(iteration)
+
         # Iterate the requested count of iterations
         for i in range(1, count):
             # The previous step Pseudo Random Function(HMAC)'s result is used as the salt for the next iteration
@@ -40,7 +40,7 @@ def pbkdf2(password, salt, count, key_length, hash_function):
 
         # Concatenate the result of the iteration to the derivative key
         derived_key += result
-        iteration += 1
+        block_number += 1
 
     return derived_key[:key_length]
 
