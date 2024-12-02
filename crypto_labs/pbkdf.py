@@ -1,4 +1,4 @@
-"""Simple implementation of basic Key Derivative Functions (KDF) for cryptographic purposes."""
+"""Simple implementation of Password-Based Key Derivative Functions (PBKDF) for cryptographic purposes."""
 
 import hmac
 import struct
@@ -44,9 +44,3 @@ def pbkdf2(password, salt, count, key_length, hash_function):
         block_number += 1
 
     return derived_key[:key_length]
-
-
-# TODO add HKDF implementation
-def hkdf():
-    """Have to implement HKDF funciton."""
-    # TODO implement HKDF
