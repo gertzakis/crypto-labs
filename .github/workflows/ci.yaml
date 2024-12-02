@@ -5,27 +5,36 @@ on: # yamllint disable-line rule:truthy rule:comments
   - "pull_request"
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  linting:
+    runs-on: "ubuntu-latest"
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Set up python
-        id: setup-python
-        uses: actions/setup-python@v5
+      # Setup CI environment
+      - name: "Check out repository"
+        uses: "actions/checkout@v4"
+      - name: "Set up python"
+        id: "setup-python"
+        uses: "actions/setup-python@v5"
         with:
-          python-version: '3.12'
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+          python-version: "3.12"
+      - name: "Install Poetry"
+        uses: "snok/install-poetry@v1"
         with:
           virtualenvs-create: false
           virtualenvs-in-project: true
           installer-parallel: true
-      #----------------------------------------------
-      # install dependencies if cache does not exist
-      #----------------------------------------------
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
-      - name: Run tests
+      # Run linters
+      - name: "Install dependencies"
+        if: "steps.cached-poetry-dependencies.outputs.cache-hit != 'true'"
+        run: "poetry install --no-interaction --no-root"
+      - name: "linting: black"
         run: "poetry run invoke black"
+      - name: "linting: flake8"
+        run: "poetry run invoke flake8"
+      - name: "linting: pylint"
+        run: "poetry run invoke pylint"
+      - name: "linting: yamllint"
+        run: "poetry run invoke yamllint"
+      - name: "linting: bandit"
+        run: "poetry run invoke bandit"
+      - name: "linting: ruff"
+        run: "poetry run invoke ruff"

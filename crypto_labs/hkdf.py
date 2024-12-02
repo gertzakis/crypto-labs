@@ -1,8 +1,7 @@
 """Simple implementation of basic HMAC-based Extract-and-Expand Key Derivative Functions (HKDF)."""
 
-import hmac
-import struct
-
+# import hmac
+# import struct
 
 
 # TODO add HKDF implementation

@@ -68,6 +68,5 @@ class TestPBKDF(unittest.TestCase):
             pbkdf2(password, salt, iterations, key_length, digest)
 
 
-
 if __name__ == "__main__":
     unittest.main()

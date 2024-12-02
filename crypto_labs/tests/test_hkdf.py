@@ -1,9 +1,10 @@
 """Test case for hkdf module."""
 
 import unittest
-from hashlib import pbkdf2_hmac
 
-from crypto_labs.hkdf import hkdf
+# from hashlib import pbkdf2_hmac
+
+# from crypto_labs.hkdf import hkdf
 
 
 class TestHKDF(unittest.TestCase):
