@@ -3,11 +3,11 @@
 import unittest
 from hashlib import pbkdf2_hmac
 
-from crypto_labs.kdf import pbkdf2
+from crypto_labs.pbkdf import pbkdf2
 
 
-class TestKDF(unittest.TestCase):
-    """Test case for KDF module."""
+class TestPBKDF(unittest.TestCase):
+    """Test case for PBKDF module."""
 
     def test_pbkdf2(self):
         """Test that pbkdf2 function returns the expected key."""
@@ -36,6 +36,13 @@ class TestKDF(unittest.TestCase):
                 4096,
                 25,
             ),
+            # Test vector with 16777216 iterations, takes 2-3min to run
+            (
+                b"password",
+                b"salt",
+                16777216,
+                20,
+            ),
         ]
 
         expected_results = [
@@ -44,6 +51,7 @@ class TestKDF(unittest.TestCase):
             b"\x4b\x00\x79\x01\xb7\x65\x48\x9a\xbe\xad\x49\xd9\x26\xf7\x21\xd0\x65\xa4\x29\xc1",
             b"\x56\xfa\x6a\xa7\x55\x48\x09\x9d\xcc\x37\xd7\xf0\x34\x25\xe0\xc3",
             b"\x3d\x2e\xec\x4f\xe4\x1c\x84\x9b\x80\xc8\xd8\x36\x62\xc0\xe4\x4a\x8b\x29\x1a\x96\x4c\xf2\xf0\x70\x38",
+            b"\xee\xfe\x3d\x61\xcd\x4d\xa4\xe4\xe9\x94\x5b\x3d\x6b\xa2\x15\x8c\x26\x34\xe9\x84",
         ]
 
         for i, test_vector in enumerate(test_vectors):
@@ -59,10 +67,6 @@ class TestKDF(unittest.TestCase):
         with self.assertRaises(ValueError):
             pbkdf2(password, salt, iterations, key_length, digest)
 
-    # TODO: add test cases for HKDF
-    def test_hkdf(self):
-        """Test that hkdf function returns the expected key."""
-        # TODO: implement test cases for hkdf function
 
 
 if __name__ == "__main__":
