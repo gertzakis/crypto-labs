@@ -22,9 +22,9 @@ class TestKDF(unittest.TestCase):
 
     def test_pbkdf2_against_rfc_vectors(self):
         """Test that pbkdf2 function returns the expected results based on RFC-6070 test vectors.
-        PBKDF2 HMAC-SHA1 Test Vectors: https://datatracker.ietf.org/doc/html/rfc6070
-        """
 
+        PBKDF2 HMAC-SHA1 Test Vectors: https://datatracker.ietf.org/doc/html/rfc6070.
+        """
         test_vectors = [
             (b"password", b"salt", 1, 20),
             (b"password", b"salt", 2, 20),
@@ -62,7 +62,7 @@ class TestKDF(unittest.TestCase):
     # TODO: add test cases for HKDF
     def test_hkdf(self):
         """Test that hkdf function returns the expected key."""
-        pass
+        # TODO: implement test cases for hkdf function
 
 
 if __name__ == "__main__":
