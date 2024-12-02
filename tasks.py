@@ -11,8 +11,8 @@ def run_command(context, command, **kwargs):
 
     Args:
         context ([invoke.task]): Invoke task object.
-        exec_cmd ([str]): Command to run.
-        local (bool): Define as `True` to execute locally
+        command (str): Command to run.
+        **kwargs: Additional arguments to pass to the context.run method.
 
     Returns:
         result (obj): Contains Invoke result from running task.
@@ -59,8 +59,8 @@ def flake8(context):
 @task
 def pylint(context):
     """Run pylint code analysis."""
-    exec_cmd = 'find . -name "*.py" | xargs pylint'
-    run_command(context, exec_cmd)
+    command = 'find . -name "*.py" | xargs pylint --rcfile pyproject.toml'
+    run_command(context, command)
 
 
 @task
@@ -120,6 +120,22 @@ def ruff(context, action=None, target=None, fix=False, output_format="concise"):
     raise Exit(code=exit_code)
 
 
+@task(
+    help={
+        "test_case": "Specific test case to run (default: None)",
+        "verbose": "Enable verbose output (default: False)",
+    },
+)
+def unittest(context, test_case=None, verbose=False):
+    """Run unit tests."""
+    exec_cmd = "python3 -m unittest"
+    if test_case:
+        exec_cmd += f" {test_case}"
+    if verbose:
+        exec_cmd += " -v"
+    run_command(context, exec_cmd)
+
+
 @task()
 def tests(context):
     """Run all tests for this repository."""
@@ -128,7 +144,7 @@ def tests(context):
     pylint(context)
     yamllint(context)
     bandit(context)
+    unittest(context)
     ruff(context)
-    # pytest(context)
 
     print("All tests have passed!")
