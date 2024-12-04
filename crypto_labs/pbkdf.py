@@ -4,7 +4,7 @@ import hmac
 import struct
 
 
-def pbkdf2(password, salt, count, key_length, hash_function):
+def pbkdf2(password: bytes, salt: bytes, count: int, key_length: int, hash_function: str = "sha1") -> bytes:
     """Password-Based Key Derivation Function 2 (PBKDF2) using HMAC as the pseudorandom function.
 
     Args:
@@ -12,7 +12,7 @@ def pbkdf2(password, salt, count, key_length, hash_function):
         salt (bytes): A salt to make the derived key unique.
         count (int): The number of iterations to perform.
         key_length (int): The length of the derived key.
-        hash_function (str): The hash function to use.
+        hash_function (str): The hash function to use. By default it uses SHA-1.
 
     Returns:
         bytes: The derived key.
