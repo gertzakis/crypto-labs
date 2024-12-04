@@ -10,6 +10,12 @@ import unittest
 class TestHKDF(unittest.TestCase):
     """Test case for HKDF module."""
 
+
+    def test_hkdf_extract(self):
+        """Test that hkdf_extract function returns the expected key."""
+        # TODO: test return key length is correct
+
+
     # TODO: add test cases for HKDF
     def test_hkdf(self):
         """Test that hkdf function returns the expected key."""
