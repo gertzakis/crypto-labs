@@ -1,8 +1,9 @@
 """Simple implementation of basic HMAC-based Extract-and-Expand Key Derivative Functions (HKDF)."""
 
 import hmac
+import hashlib
 # import struct
-
+import sys
 
 def hkdf_extract(salt: bytes, input_key_material: bytes, hash_function: str) -> bytes:
     """HKDF Extract function that uses HMAC as the pseudorandom function.
@@ -13,7 +14,7 @@ def hkdf_extract(salt: bytes, input_key_material: bytes, hash_function: str) -> 
         hash_function (str): The hash function to use.
 
     Returns:
-        bytes: The extracted key.
+        bytes: The extracted Pseudo Random Key (PRK).
     """
     # If a salt is not provided, set it to a string of zeros("0").
     # The length of the string should be the length of the hash function's output.
@@ -35,30 +36,22 @@ def hkdf_expand(pseudo_random_key: bytes, info: bytes, key_length: int, hash_fun
         hash_function (str): The hash function to use.
 
     Returns:
-        bytes: The expanded key.
+        bytes: The expanded Output Keying Material (OKM).
     """
+    expanded_key = b""
+    block_result = b""
+    block_number = 1
     hash_length = hmac.new(b"", b"", hash_function).digest_size
+
+    # Check if the expanded key's desired length is too long based on RFC 5869
     if key_length > 255 * hash_length:
         raise ValueError("Key length too long. Cannot expand output keying material bigger than `255 * Hash's length`.")
 
-    # The number of blocks to use for the HMAC function
-    num_blocks = key_length // hash_length + (1 if key_length % hash_length else 0)
-    block_result = b""
-    # The expanded key
-    expanded_key = b""
-    block_number = 1
-
-    # while len(expanded_key) < key_length:
-    #     block_result = hmac.new(pseudo_random_key, block_result + info + bytes([block_number]), hash_function).digest()
-    #     expanded_key += block_result
-    #     block_number += 1
-
-
     # The output of the HMAC function is the expanded key
-    for i in range(num_blocks):
-        print(i)
-        block_result = hmac.new(pseudo_random_key, block_result + info + bytes([i + 1]), hash_function).digest()
+    while len(expanded_key) < key_length:
+        block_result = hmac.new(pseudo_random_key, block_result + info + bytes([block_number]), hash_function).digest()
         expanded_key += block_result
+        block_number += 1
 
     return expanded_key[:key_length]
 
