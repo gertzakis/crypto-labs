@@ -26,8 +26,6 @@ jobs:
         if: "steps.cached-poetry-dependencies.outputs.cache-hit != 'true'"
         run: "poetry install --no-interaction --no-root"
       # Run linters
-      - name: "linting: black"
-        run: "poetry run invoke black"
       - name: "linting: flake8"
         run: "poetry run invoke flake8"
       - name: "linting: pylint"
