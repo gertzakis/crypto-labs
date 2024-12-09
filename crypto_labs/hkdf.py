@@ -2,8 +2,10 @@
 
 import hmac
 import hashlib
+
 # import struct
 import sys
+
 
 def hkdf_extract(salt: bytes, input_key_material: bytes, hash_function: str) -> bytes:
     """HKDF Extract function that uses HMAC as the pseudorandom function.
@@ -20,13 +22,15 @@ def hkdf_extract(salt: bytes, input_key_material: bytes, hash_function: str) -> 
     # The length of the string should be the length of the hash function's output.
     if not salt:
         hash_length = hmac.new(b"", b"", hash_function).digest_size
-        salt = bytes("0" * hash_length, "utf-8")
+        salt = bytes((0,) * hash_length)
 
     # The result of the HMAC function is the extracted key
     return hmac.new(salt, input_key_material, hash_function).digest()
 
 
-def hkdf_expand(pseudo_random_key: bytes, info: bytes, key_length: int, hash_function: str) -> bytes:
+def hkdf_expand(
+    pseudo_random_key: bytes, info: bytes, key_length: int, hash_function: str
+) -> bytes:
     """HKDF Expand function that uses HMAC as the pseudorandom function.
 
     Args:
@@ -45,11 +49,17 @@ def hkdf_expand(pseudo_random_key: bytes, info: bytes, key_length: int, hash_fun
 
     # Check if the expanded key's desired length is too long based on RFC 5869
     if key_length > 255 * hash_length:
-        raise ValueError("Key length too long. Cannot expand output keying material bigger than `255 * Hash's length`.")
+        raise ValueError(
+            "Key length too long. Cannot expand output keying material bigger than `255 * Hash's length`."
+        )
 
     # The output of the HMAC function is the expanded key
     while len(expanded_key) < key_length:
-        block_result = hmac.new(pseudo_random_key, block_result + info + bytes([block_number]), hash_function).digest()
+        block_result = hmac.new(
+            pseudo_random_key,
+            block_result + info + bytes([block_number]),
+            hash_function,
+        ).digest()
         expanded_key += block_result
         block_number += 1
 
