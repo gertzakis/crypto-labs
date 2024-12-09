@@ -1,29 +1,42 @@
 """Test case for hkdf module."""
 
 import unittest
-import hashlib
 
-# from hashlib import pbkdf2_hmac
-from crypto_labs.hkdf import hkdf_extract, hkdf_expand
-from crypto_labs.hkdf_copy import hkdf_extract_tupou, hkdf_expand_tupou
-
-# from cryptography.hazmat.primitives.kdf.hkdf import HKDF
-# from cryptography.hazmat.primitives import hashes
+from crypto_labs.hkdf import hkdf_expand, hkdf_extract
 
 
 class TestHKDF(unittest.TestCase):
     """Test case for HKDF module."""
 
-    # def test_hkdf_expand(self):
-    #     """Test that hkdf_extract function returns the expected key."""
-    #     prk = b"pseudorandomkey"
-    #     info = b"makis"
+    def test_hkdf_extract_length(self):
+        """Test that hkdf_extract function returns the expected length."""
+        salt = b"pseudorandomkey"
+        ikm = b"makis"
 
-    #     key = hkdf_expand(prk, info, 5, "sha256")
-    #     self.assertEqual(key, HKDF(hashes.SHA256(), 5, prk, info).derive(info))
+        sha1_key = hkdf_extract(salt, ikm, "sha1")
+        sha256_key = hkdf_extract(salt, ikm, "sha256")
+        sha512_key = hkdf_extract(salt, ikm, "sha512")
+        self.assertEqual(len(sha1_key), 20)
+        self.assertEqual(len(sha256_key), 32)
+        self.assertEqual(len(sha512_key), 64)
 
-    def hex_to_bytes(self, hex_string):
-        return bytes.fromhex(hex_string[2:]) if hex_string else bytes.fromhex("")
+    def test_hkdf_expand_length(self):
+        """Test that hkdf_expand function returns the expected length."""
+        pseudo_random_key = hkdf_extract(b"pseudorandomkey", b"makis", "sha256")
+        info = b"info"
+        key_length = 32
+
+        sha256_key = hkdf_expand(pseudo_random_key, info, key_length, "sha256")
+        self.assertEqual(len(sha256_key), key_length)
+
+    def test_hkdf_expand_value_error_on_long_key(self):
+        """Test that hkdf_expand function raises a ValueError when the key length is too long."""
+        pseudo_random_key = hkdf_extract(b"pseudorandomkey", b"makis", "sha256")
+        info = b"info"
+        key_length = 255 * 32 + 1  # SHA-256 hash length is 32 bytes
+
+        with self.assertRaises(ValueError):
+            hkdf_expand(pseudo_random_key, info, key_length, "sha256")
 
     def test_hkdf_against_rfc_vectors(self):
         """Test that hkdf functions returns the expected results based on RFC-5869 test vectors.
@@ -96,24 +109,23 @@ class TestHKDF(unittest.TestCase):
             },
         ]
 
+        def hex_to_bytes(hex_string):
+            return bytes.fromhex(hex_string[2:]) if hex_string else bytes.fromhex("")
+
         for test_vector in test_vectors:
             pseudo_random_key = hkdf_extract(
-                salt=self.hex_to_bytes(test_vector["salt"]),
-                input_key_material=self.hex_to_bytes(test_vector["ikm"]),
+                salt=hex_to_bytes(test_vector["salt"]),
+                input_key_material=hex_to_bytes(test_vector["ikm"]),
                 hash_function=test_vector["hash"],
             )
             output_keying_material = hkdf_expand(
                 pseudo_random_key=pseudo_random_key,
-                info=self.hex_to_bytes(test_vector["info"]),
+                info=hex_to_bytes(test_vector["info"]),
                 key_length=test_vector["L"],
                 hash_function=test_vector["hash"],
             )
-            self.assertEqual(pseudo_random_key, self.hex_to_bytes(test_vector["PRK"]))
-            self.assertEqual(output_keying_material, self.hex_to_bytes(test_vector["OKM"]))
-
-    # TODO: add test cases for HKDF
-    def test_hkdf(self):
-        """Test that hkdf function returns the expected key."""
+            self.assertEqual(pseudo_random_key, hex_to_bytes(test_vector["PRK"]))
+            self.assertEqual(output_keying_material, hex_to_bytes(test_vector["OKM"]))
 
 
 if __name__ == "__main__":
