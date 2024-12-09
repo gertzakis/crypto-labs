@@ -43,13 +43,6 @@ def lock(context, check=False):
 
 
 @task
-def black(context):
-    """Run black to check that Python files adherence to black standards."""
-    exec_cmd = "black --check --diff ."
-    run_command(context, exec_cmd)
-
-
-@task
 def flake8(context):
     """Run flake8 code analysis."""
     exec_cmd = "flake8 . --config .flake8"
@@ -139,7 +132,6 @@ def unittest(context, test_case=None, verbose=False):
 @task()
 def tests(context):
     """Run all tests for this repository."""
-    black(context)
     flake8(context)
     pylint(context)
     yamllint(context)
