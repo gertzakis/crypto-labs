@@ -28,9 +28,7 @@ def hkdf_extract(salt: bytes, input_key_material: bytes, hash_function: str) -> 
     return hmac.new(salt, input_key_material, hash_function).digest()
 
 
-def hkdf_expand(
-    pseudo_random_key: bytes, info: bytes, key_length: int, hash_function: str
-) -> bytes:
+def hkdf_expand(pseudo_random_key: bytes, info: bytes, key_length: int, hash_function: str) -> bytes:
     """HKDF Expand function that uses HMAC as the pseudorandom function.
 
     Args:
@@ -49,9 +47,7 @@ def hkdf_expand(
 
     # Check if the expanded key's desired length is too long based on RFC 5869
     if key_length > 255 * hash_length:
-        raise ValueError(
-            "Key length too long. Cannot expand output keying material bigger than `255 * Hash's length`."
-        )
+        raise ValueError("Key length too long. Cannot expand output keying material bigger than `255 * Hash's length`.")
 
     # The output of the HMAC function is the expanded key
     while len(expanded_key) < key_length:

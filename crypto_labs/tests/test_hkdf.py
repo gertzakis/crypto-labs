@@ -109,9 +109,7 @@ class TestHKDF(unittest.TestCase):
                 hash_function=test_vector["hash"],
             )
             self.assertEqual(pseudo_random_key, self.hex_to_bytes(test_vector["PRK"]))
-            self.assertEqual(
-                output_keying_material, self.hex_to_bytes(test_vector["OKM"])
-            )
+            self.assertEqual(output_keying_material, self.hex_to_bytes(test_vector["OKM"]))
 
     # TODO: add test cases for HKDF
     def test_hkdf(self):
