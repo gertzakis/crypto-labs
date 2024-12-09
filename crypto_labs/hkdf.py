@@ -1,10 +1,6 @@
 """Simple implementation of basic HMAC-based Extract-and-Expand Key Derivative Functions (HKDF)."""
 
 import hmac
-import hashlib
-
-# import struct
-import sys
 
 
 def hkdf_extract(salt: bytes, input_key_material: bytes, hash_function: str) -> bytes:
