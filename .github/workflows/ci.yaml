@@ -1,8 +1,11 @@
 ---
 name: "CI"
 on: # yamllint disable-line rule:truthy rule:comments
-  - "push"
-  - "pull_request"
+  push:
+    branches:
+      - "main"
+      - "develop"
+  pull_request: ~
 
 jobs:
   linting:
