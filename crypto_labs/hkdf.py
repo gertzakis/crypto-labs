@@ -58,7 +58,6 @@ def hkdf_expand(pseudo_random_key: bytes, info: bytes, key_length: int, hash_fun
     return expanded_key[:key_length]
 
 
-# TODO add HKDF implementation
 def hkdf(salt: bytes, input_key_material: bytes, info: bytes, key_length: int, hash_function: str) -> tuple:
     """Executing the whole HKDF process.
 
