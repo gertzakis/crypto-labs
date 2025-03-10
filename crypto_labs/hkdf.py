@@ -59,6 +59,20 @@ def hkdf_expand(pseudo_random_key: bytes, info: bytes, key_length: int, hash_fun
 
 
 # TODO add HKDF implementation
-def hkdf():
-    """Have to implement HKDF funciton."""
-    # TODO implement HKDF
+def hkdf(salt: bytes, input_key_material: bytes, info: bytes, key_length: int, hash_function: str) -> tuple:
+    """Executing the whole HKDF process.
+
+    Args:
+        salt (bytes): The salt to use for the HMAC function.
+        input_key_material (bytes): The input key material to use.
+        info (bytes): The context and application specific information.
+        key_length (int): The length of the output keying material in bytes.
+        hash_function (str): The hash function to use.
+
+    Returns:
+        tuple: Psuedo Random Key (PRK) and Output Keying Material (OKM).
+    """
+    prk = hkdf_extract(salt, input_key_material, hash_function)
+    okm = hkdf_expand(prk, info, key_length, hash_function)
+
+    return prk, okm

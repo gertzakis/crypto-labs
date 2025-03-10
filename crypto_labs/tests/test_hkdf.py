@@ -2,7 +2,7 @@
 
 import unittest
 
-from crypto_labs.hkdf import hkdf_expand, hkdf_extract
+from crypto_labs.hkdf import hkdf_expand, hkdf_extract, hkdf
 
 
 class TestHKDF(unittest.TestCase):
@@ -126,6 +126,18 @@ class TestHKDF(unittest.TestCase):
             )
             self.assertEqual(pseudo_random_key, hex_to_bytes(test_vector["PRK"]))
             self.assertEqual(output_keying_material, hex_to_bytes(test_vector["OKM"]))
+            self.assertEqual(len(output_keying_material), test_vector["L"])
+
+            # Test full implementation of HKDF
+            prk, okm = hkdf(
+                salt=hex_to_bytes(test_vector["salt"]),
+                input_key_material=hex_to_bytes(test_vector["ikm"]),
+                info=hex_to_bytes(test_vector["info"]),
+                key_length=test_vector["L"],
+                hash_function=test_vector["hash"],
+            )
+            self.assertEqual(prk, hex_to_bytes(test_vector["PRK"]))
+            self.assertEqual(okm, hex_to_bytes(test_vector["OKM"]))
 
 
 if __name__ == "__main__":
